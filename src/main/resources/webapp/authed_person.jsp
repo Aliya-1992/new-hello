@@ -28,7 +28,7 @@ Your data:
 <p>Your country ${sessionScope.userCountry}</p>
 
 
-<td><a href ="editform.jsp?id=${person.getId()}">edit</a></td>
+
 <a href="changeinformationform.jsp">Edit</a>
 <form action="logout" method="post">
 <input type="submit" value="Logout" >

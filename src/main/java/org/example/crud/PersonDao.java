@@ -41,22 +41,15 @@ public class PersonDao {
         try {
             Connection connection = PersonDao.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("insert into crud_example (userName,userPass,userEmail,userCountry) values(?,?,?,?)");
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            byte[] bytes = md5.digest(person.getUserPass().getBytes());
-            StringBuilder builder = new StringBuilder();
-            for (byte b : bytes) {
-                builder.append(String.format("%02X", b));
-                System.out.println(builder.toString());
-            }
+
             preparedStatement.setString(1, person.getUserName());
-            preparedStatement.setString(2, builder.toString());
+            preparedStatement.setString(2, person.hash(person.getUserPass()));
             preparedStatement.setString(3, person.getUserEmail());
             preparedStatement.setString(4, person.getUserCountry());
             status = preparedStatement.executeUpdate();
         } catch (SQLException e) {
             throw new RuntimeException(e);
-        } catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
+
         }
         return status;
 
@@ -122,6 +115,7 @@ public class PersonDao {
         return person;
     }
 
+
     public static Person getPersonByName(String name) {
         Person person = new Person();
 //        System.out.println("getPersonByName starts");
@@ -139,6 +133,7 @@ public class PersonDao {
                 person.setUserPass(resultSet.getString(3));
                 person.setUserEmail(resultSet.getString(4));
                 person.setUserCountry(resultSet.getString(5));
+
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);
@@ -148,30 +143,67 @@ public class PersonDao {
 
     public static int update(Person person) {
         int status = 0;
+        Person pers = PersonDao.getPersonById(person.getId());
+        String oldPass = pers.getUserPass();
+        System.out.println(oldPass);
+        System.out.println(person.getUserPass());
+        if (!oldPass.equals(person.getUserPass())){
+            try {
+                Connection connection = PersonDao.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement("update crud_example set userName=?,userPass=?,userEmail=?,userCountry=? where id=?");
+                preparedStatement.setString(1, person.getUserName());
+                preparedStatement.setString(2, person.hash(person.getUserPass()));
+                preparedStatement.setString(3, person.getUserEmail());
+                preparedStatement.setString(4, person.getUserCountry());
+                preparedStatement.setInt(5, person.getId());
+
+                status = preparedStatement.executeUpdate();
+            } catch (SQLException e) {
+                throw new RuntimeException(e);
+            }
+                return status;
+            }
+        else{
+            try {
+                    Connection connection = PersonDao.getConnection();
+                    PreparedStatement preparedStatement = connection.prepareStatement("update crud_example set userName=?,userPass=?,userEmail=?,userCountry=? where id=?");
+                    preparedStatement.setString(1, person.getUserName());
+                    preparedStatement.setString(2, person.getUserPass());
+                    preparedStatement.setString(3, person.getUserEmail());
+                    preparedStatement.setString(4, person.getUserCountry());
+                    preparedStatement.setInt(5, person.getId());
+                    status = preparedStatement.executeUpdate();
+                } catch (SQLException e) {
+                    throw new RuntimeException(e);
+                }
+            return status;}
+            }
+
+
+
+
+
+
+
+
+    public static String checkPass(Person person){
         try {
             Connection connection = PersonDao.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement("update crud_example set userName=?,userPass=?,userEmail=?,userCountry=? where id=?");
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            byte[] bytes = md5.digest(person.getUserPass().getBytes());
-            StringBuilder builder = new StringBuilder();
-            for (byte b : bytes) {
-                builder.append(String.format("%02X", b));
-                System.out.println(builder.toString());
+            PreparedStatement preparedStatement = connection.prepareStatement("select userPass from crud_example where id=?");
+            preparedStatement.setInt(1, person.getId());
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                person.setUserPass(resultSet.getString(3));
+                return person.getUserPass();
             }
-            preparedStatement.setString(1, person.getUserName());
-            preparedStatement.setString(2, builder.toString());
-            preparedStatement.setString(3, person.getUserEmail());
-            preparedStatement.setString(4, person.getUserCountry());
-            preparedStatement.setInt(5, person.getId());
 
-            status = preparedStatement.executeUpdate();
-        } catch (SQLException e) {
+            return null;
+        } catch (
+                SQLException e) {
             throw new RuntimeException(e);
+
         }
-    catch (NoSuchAlgorithmException e) {
-        throw new RuntimeException(e);
-    }
-        return status;
+
     }
 
 
@@ -206,39 +238,14 @@ public class PersonDao {
          this.email = email;
          this.country = country;
      }
-        public static int update1(String name, String pass, String email, String country) {
 
-            int status = 0;
-            try {
-                Connection connection = PersonDao.getConnection();
-                PreparedStatement preparedStatement = connection.prepareStatement("update crud_example set userName=?,userPass=?,userEmail=?,userCountry=? where userName=");
-
-                preparedStatement.setString(1, name);
-                preparedStatement.setString(2, pass);
-                preparedStatement.setString(3, email);
-                preparedStatement.setString(4, country);
-
-                status = preparedStatement.executeUpdate();
-            } catch (SQLException e) {
-                throw new RuntimeException(e);
-            }
-
-            return status;
-        }
     public static int update2(Person person) {
         int status = 0;
         try {
             Connection connection = PersonDao.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement("update crud_example set userName=?,userPass=?,userEmail=?,userCountry=? where id=?");
-            MessageDigest md5 = MessageDigest.getInstance("MD5");
-            byte[] bytes = md5.digest(person.getUserPass().getBytes());
-            StringBuilder builder = new StringBuilder();
-            for (byte b : bytes) {
-                builder.append(String.format("%02X", b));
-                System.out.println(builder.toString());
-            }
             preparedStatement.setString(1, person.getUserName());
-            preparedStatement.setString(2, builder.toString());
+            preparedStatement.setString(2, person.hash(person.getUserPass()));
             preparedStatement.setString(3, person.getUserEmail());
             preparedStatement.setString(4, person.getUserCountry());
             preparedStatement.setInt(5, person.getId());
@@ -247,9 +254,7 @@ public class PersonDao {
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
-        catch (NoSuchAlgorithmException e) {
-            throw new RuntimeException(e);
-        }
+
         return status;
     }
 }

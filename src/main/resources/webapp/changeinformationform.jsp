@@ -21,7 +21,7 @@ Person person = PersonDao.getPersonByName(userName);
         <tr><td>Name:</td><td><input type="text" name="userName" value="${sessionScope.userName}"/></td></tr>
         <tr><td>Password:</td><td><input type="password" name="userPass" value="${sessionScope.userPass1}"/></td></tr>
         <tr><td>Email:</td><td><input type="email" name="userEmail" value="${sessionScope.userEmail}"/></td></tr>
-         <tr><td>"${sessionScope.userPass1}"</td><td>
+
         <tr><td>Country:</td><td>
             <select name="userCountry" style="width:150px">
                 <option>India</option>
