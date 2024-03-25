@@ -1,0 +1,24 @@
+body{
+    background:#b8b365;
+    display: flex;
+    justify-content: center;
+}
+
+.regForm{
+    background: skyblue;
+    width: 25%;
+    padding: 10px;
+    margin: 70px;
+    font-size: 20px;
+}
+
+.name{
+    display:flex;
+    justify-content: center;
+
+}
+
+.submitBottom{
+    display:flex;
+    justify-content: center;
+}
