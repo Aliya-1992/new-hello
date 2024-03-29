@@ -6,6 +6,14 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+      <style type="text/css">
+            body {
+                padding-left: 38em;
+                background-color: #03fcad;
+                position:center;
+                font-family: Georgia, "Times New Roman",
+                Times, serif;}
+        </style>
 </head>
 <body>
 <%
@@ -22,6 +30,10 @@ String userPass1 = (String) httpSession.getAttribute("userPass1");
 }
 %>
 <h3>Hello ${sessionScope.userName}</h3>
+<h3></h3>
+<img src="images.jpg"/>
+<br>
+<br>
 Your data:
 <p>Your name ${sessionScope.userName}</p>
 <p>Your email ${sessionScope.userEmail}</p>

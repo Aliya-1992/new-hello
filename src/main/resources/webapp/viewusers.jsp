@@ -6,6 +6,18 @@
 <head>
     <meta charset="ISO-8859-1">
     <title>View Persons</title>
+    <style type="text/css">
+                body {
+                    padding-left: 38em;
+                    background-color: #03fcad;
+                    position:center;}
+                    ul.navbar {
+                    position: absolute;
+                    top: 2em;
+                    left: 1em;
+                    width: 9em }
+
+            </style>
 </head>
 <body>
 <h1>Persons list</h1>
